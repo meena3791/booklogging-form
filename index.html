@@ -189,6 +189,23 @@
         height: auto;
         margin: 2rem auto; /* Center the image and add some margin */
     }
+        /* Delete button styles */
+        .delete-row-btn {
+            background-color: #ef4444; /* red-500 */
+            color: white;
+            border: none;
+            border-radius: 0.25rem; /* rounded-sm */
+            padding: 0.25rem 0.5rem; /* py-1 px-2 */
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            margin-left: 0.5rem; /* Space from input */
+            line-height: 1; /* Align 'x' properly */
+        }
+
+        .delete-row-btn:hover {
+            background-color: #dc2626; /* red-600 */
+        }
     </style>
 </head>
 <body class="p-4 sm:p-6 lg:p-8">
@@ -323,6 +340,7 @@
                             <th>Call no.</th>
                             <th>Author</th>
                             <th>Title</th>
+                            <th class="w-10"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -331,6 +349,7 @@
                             <td><input type="text" name="callNo_0" placeholder="e.g., QC173.4" required></td>
                             <td><input type="text" name="author_0" placeholder="e.g., Lisa Randall" required></td>
                             <td><input type="text" name="title_0" placeholder="e.g., Warped Passages" required></td>
+                            <td><button type="button" class="delete-row-btn">✖</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -362,13 +381,33 @@
                     <td><input type="text" name="callNo_${rowCount}" placeholder="e.g., QC173.4"></td>
                     <td><input type="text" name="author_${rowCount}" placeholder="e.g., Lisa Randall"></td>
                     <td><input type="text" name="title_${rowCount}" placeholder="e.g., Warped Passages"></td>
+                    <td><button type="button" class="delete-row-btn">✖</button></td>
                 `;
                 booksTableBody.appendChild(newRow);
                 rowCount++;
+                // Add event listener to the new delete button
+                newRow.querySelector('.delete-row-btn').addEventListener('click', deleteBookRow);
+            }
+             // Function to delete a row from the books table
+            function deleteBookRow(event) {
+                const rowToDelete = event.target.closest('.book-row');
+                if (rowToDelete) {
+                    // Ensure at least one row remains
+                    if (booksTableBody.querySelectorAll('.book-row').length > 1) {
+                        rowToDelete.remove();
+                    } else {
+                        showMessage('Cannot delete the last row.', 'error');
+                    }
+                }
             }
 
             // Event listener for "Add new row" button
             addNewRowBtn.addEventListener('click', addNewBookRow);
+
+             // Add event listeners to initial delete buttons (if any exist)
+            booksTableBody.querySelectorAll('.delete-row-btn').forEach(button => {
+                button.addEventListener('click', deleteBookRow);
+            });
 
             // Event listener for the main form submission
             mainSubmitBtn.addEventListener('click', async (event) => {
