@@ -504,6 +504,35 @@
                     showMessage('Failed to paste data. Please ensure it is correctly formatted.', 'error');
                 }
             }
+            // Function to clear all form fields and reset the book table
+            function clearForm() {
+                // Clear text, email, and date inputs
+                document.querySelectorAll('input[type="text"], input[type="email"], input[type="date"]').forEach(input => {
+                    input.value = '';
+                    input.style.borderColor = ''; // Reset validation border
+                });
+
+                // Reset select dropdowns
+                document.querySelectorAll('select').forEach(select => {
+                    select.selectedIndex = 0; // Set to the first option (usually "Select...")
+                    select.style.borderColor = ''; // Reset validation border
+                });
+
+                // Uncheck all grade level checkboxes
+                gradeCheckboxesContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                gradeCheckboxesContainer.style.borderColor = ''; // Reset validation border
+
+                // Clear all dynamic book rows and add one empty row
+                while (booksTableBody.querySelectorAll('.book-row').length > 0) {
+                    booksTableBody.querySelector('.book-row').remove();
+                }
+                rowCount = 0; // Reset row count
+                addNewBookRow(); // Add back one empty row
+
+                showMessage('Form cleared successfully!', 'info');
+            }
 
             // Event listener for "Paste from Spreadsheet" button
             pasteFromSpreadsheetBtn.addEventListener('click', pasteDataFromSpreadsheet);
