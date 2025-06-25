@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booklogging Entry Form</title>
+    <!-- Chosen Palette: Soft Blues, Grays, and White for a clean, harmonious look. -->
+    <!-- Application Structure Plan: The form is structured into thematic sections mirroring the image: "Booklogger Information," "School Selection," "Presentation Details," and a "Dynamic Book List." This logical grouping enhances usability by organizing related inputs. Each main section is contained within a card-like div with a soft blue background, providing clear visual separation. The dynamic book list is the core interactive component, allowing flexible data entry for multiple books within a single submission. This structure prioritizes intuitive user flow and easy content consumption. -->
+    <!-- Visualization & Content Choices: For "Booklogger," "School," and "Presentation" sections, standard text inputs, email inputs, date pickers, and dropdowns (select elements) are used (Goal: Inform/Collect). The "Books List" uses a dynamic table (HTML table + JS for row addition) to facilitate structured, repeatable data entry (Goal: Organize/Collect). An "Add new row" button enables dynamic interaction (Interaction). The info icon is a simple unicode character for clarity (Goal: Inform). All visual elements are built with HTML/CSS and styled using Tailwind, and JavaScript handles dynamic behavior, adhering to the NO SVG/Mermaid constraints. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 - very light gray background */
+            color: #334155; /* slate-700 - default text color */
+        }
+        .form-section {
+            background-color: #e0f2fe; /* light-blue-100 - very light blue for sections */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 2rem; /* p-8 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05); /* subtle shadow */
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        select {
+            display: block;
+            width: 100%;
+            padding: 0.625rem 0.875rem; /* px-3.5 py-2.5 */
+            border: 1px solid #cbd5e1; /* slate-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            background-color: #ffffff; /* white background for inputs */
+            font-size: 1rem;
+            line-height: 1.5rem;
+            color: #334155; /* slate-700 */
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            -webkit-appearance: none; /* Remove default styling for select on WebKit */
+            -moz-appearance: none;    /* Remove default styling for select on Mozilla */
+            appearance: none;         /* Remove default styling for select */
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #2563eb; /* blue-600 */
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); /* blue-600 with opacity */
+        }
+        /* Custom arrow for select dropdowns */
+        .select-wrapper {
+            position: relative;
+        }
+        .select-wrapper::after {
+            content: '▼'; /* Unicode down arrow */
+            position: absolute;
+            right: 0.875rem; /* Equivalent to px-3.5 */
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #64748b; /* slate-500 */
+            font-size: 0.75rem;
+        }
+
+        /* Styles for the dynamic book list table */
+        #booksTable th,
+        #booksTable td {
+            padding: 0.75rem 1rem; /* p-3 px-4 */
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0; /* slate-200 */
+        }
+        #booksTable thead th {
+            background-color: #f1f5f9; /* slate-100 */
+            color: #475569; /* slate-600 */
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+        #booksTable tbody tr:last-child td {
+            border-bottom: none; /* No border for the last row */
+        }
+        #booksTable input[type="text"] {
+            background-color: #f8fafc; /* slate-50 for table inputs */
+        }
+        #booksTable tbody tr:nth-child(odd) {
+             background-color: #ffffff; /* white */
+        }
+        #booksTable tbody tr:nth-child(even) {
+            background-color: #f8fafc; /* slate-50 */
+        }
+
+        .submit-button {
+            display: block;
+            width: fit-content;
+            margin: 2.5rem auto 0; /* mt-10, centered */
+            padding: 0.75rem 2rem; /* py-3 px-8 */
+            background-color: #2563eb; /* blue-600 */
+            color: #ffffff;
+            border: none;
+            border-radius: 0.5rem; /* rounded-lg */
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        .submit-button:hover {
+            background-color: #1d4ed8; /* blue-700 */
+            transform: translateY(-2px);
+        }
+        .submit-button:active {
+            background-color: #1e40af; /* blue-800 */
+            transform: translateY(0);
+        }
+        .submit-button:disabled {
+            background-color: #9ca3af; /* gray-400 */
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .info-icon {
+            display: inline-block;
+            font-size: 1.25rem; /* text-xl */
+            margin-right: 0.5rem; /* mr-2 */
+            color: #60a5fa; /* blue-400 */
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 lg:p-8">
+
+    <div class="max-w-4xl mx-auto space-y-8">
+        <!-- Section 1: Booklogger Information -->
+        <section class="form-section">
+            <h3 class="text-xl font-semibold text-slate-800 mb-6">Booklogger information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-slate-700 mb-2">Name</label>
+                    <input type="text" id="name" name="bookloggerName" placeholder="Enter your full name" required>
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Email</label>
+                    <input type="email" id="email" name="bookloggerEmail" placeholder="you@example.com" required>
+                </div>
+                <div class="md:col-span-2">
+                    <label for="contact" class="block text-sm font-medium text-slate-700 mb-2">Contact</label>
+                    <input type="text" id="contact" name="bookloggerContact" placeholder="Phone or preferred contact method" required>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Select School -->
+        <section class="form-section">
+            <h3 class="text-xl font-semibold text-slate-800 mb-6">Select school where you booklegged</h3>
+            <div class="select-wrapper max-w-sm">
+                <label for="school" class="sr-only">Select school</label>
+                <select id="school" name="schoolName" required>
+                    <option value="">Select school</option>
+                    <option value="School A">School A</option>
+                    <option value="School B">School B</option>
+                    <option value="School C">School C</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <p class="mt-4 text-sm text-blue-600 hover:text-blue-800">
+                <a href="#" class="inline-flex items-center">Click here to check staff directory</a>
+            </p>
+        </section>
+
+        <!-- Section 3: Presentation Information -->
+        <section class="form-section">
+            <h3 class="text-xl font-semibold text-slate-800 mb-6">Presentation information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+                <div>
+                    <label for="presentationDate" class="block text-sm font-medium text-slate-700 mb-2">Presentation date</label>
+                    <input type="date" id="presentationDate" name="presentationDate" placeholder="mm/dd/yyyy" required>
+                </div>
+                <div>
+                    <label for="teacherName" class="block text-sm font-medium text-slate-700 mb-2">Teacher's name</label>
+                    <input type="text" id="teacherName" name="teacherName" placeholder="Enter teacher's name" required>
+                </div>
+                <div class="md:col-span-2 select-wrapper max-w-sm">
+                    <label for="grade" class="sr-only">Select grade</label>
+                    <select id="grade" name="gradeLevel" required>
+                        <option value="">Select grade</option>
+                        <option value="Kindergarten">Kindergarten</option>
+                        <option value="1st Grade">1st Grade</option>
+                        <option value="2nd Grade">2nd Grade</option>
+                        <option value="3rd Grade">3rd Grade</option>
+                        <option value="4th Grade">4th Grade</option>
+                        <option value="5th Grade">5th Grade</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Dynamic List of Books -->
+        <section>
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-slate-800">
+                    <span class="info-icon">&#x2139;</span> Enter the list of books you presented
+                </h3>
+                <button type="button" id="addNewRowBtn" class="flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium text-sm rounded-md shadow-sm transition-colors duration-200">
+                    <span class="text-xl mr-1">+</span> Add new row
+                </button>
+            </div>
+
+            <div class="overflow-x-auto rounded-lg shadow-sm border border-slate-200">
+                <table id="booksTable" class="min-w-full bg-white">
+                    <thead>
+                        <tr>
+                            <th>Call no.</th>
+                            <th>Author</th>
+                            <th>Title</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Initial row for book entry -->
+                        <tr class="book-row">
+                            <td><input type="text" name="callNo_0" placeholder="e.g., QC173.4" required></td>
+                            <td><input type="text" name="author_0" placeholder="e.g., Lisa Randall" required></td>
+                            <td><input type="text" name="title_0" placeholder="e.g., Warped Passages" required></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" id="mainSubmitBtn" class="submit-button">Submit</button>
+        </div>
+    </div>
+
+    <!-- Message box for user feedback -->
+    <div id="messageBox" class="message-box"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const addNewRowBtn = document.getElementById('addNewRowBtn');
+            const booksTableBody = document.querySelector('#booksTable tbody');
+            const mainSubmitBtn = document.getElementById('mainSubmitBtn');
+            const messageBox = document.getElementById('messageBox');
+            let rowCount = 1; // Start at 1 because one row is already present in HTML
+
+            // Function to add a new row to the books table
+            function addNewBookRow() {
+                const newRow = document.createElement('tr');
+                newRow.className = 'book-row';
+                newRow.innerHTML = `
+                    <td><input type="text" name="callNo_${rowCount}" placeholder="e.g., QC173.4"></td>
+                    <td><input type="text" name="author_${rowCount}" placeholder="e.g., Lisa Randall"></td>
+                    <td><input type="text" name="title_${rowCount}" placeholder="e.g., Warped Passages"></td>
+                `;
+                booksTableBody.appendChild(newRow);
+                rowCount++;
+            }
+
+            // Event listener for "Add new row" button
+            addNewRowBtn.addEventListener('click', addNewBookRow);
+
+            // Event listener for the main form submission
+            mainSubmitBtn.addEventListener('click', async (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                mainSubmitBtn.disabled = true;
+                mainSubmitBtn.textContent = 'Submitting...';
+
+                // Collect all form data
+                const formData = {};
+                const formElements = document.querySelectorAll('input, select');
+
+                let allRequiredFieldsFilled = true;
+
+                formElements.forEach(element => {
+                    const name = element.name || element.id;
+                    if (name) { // Ensure element has a name or ID
+                        // Basic required validation and highlight
+                        if (element.hasAttribute('required') && element.value.trim() === '') {
+                            allRequiredFieldsFilled = false;
+                            element.style.borderColor = '#ef4444'; // Red border
+                        } else {
+                            element.style.borderColor = ''; // Reset border
+                        }
+
+                        // Collect value
+                        formData[name] = element.value.trim();
+                    }
+                });
+
+                // Collect data from dynamically added book rows
+                const booksData = [];
+                const bookRows = booksTableBody.querySelectorAll('.book-row');
+                bookRows.forEach((row, index) => {
+                    const callNoInput = row.querySelector(`input[name="callNo_${index}"]`);
+                    const authorInput = row.querySelector(`input[name="author_${index}"]`);
+                    const titleInput = row.querySelector(`input[name="title_${index}"]`);
+
+                    // Also check required for dynamic rows
+                    // Note: This form's image example implies optional blank rows for books,
+                    // but inputs have 'required'. This logic allows empty optional rows if inputs were not required.
+                    // If all book fields *must* be filled for a row to be included, adjust this.
+                    const isRowFilled = callNoInput.value.trim() || authorInput.value.trim() || titleInput.value.trim();
+
+                    if (isRowFilled) {
+                        if (callNoInput && callNoInput.hasAttribute('required') && callNoInput.value.trim() === '') {
+                            allRequiredFieldsFilled = false;
+                            callNoInput.style.borderColor = '#ef4444';
+                        } else if (callNoInput) {
+                            callNoInput.style.borderColor = '';
+                        }
+
+                        if (authorInput && authorInput.hasAttribute('required') && authorInput.value.trim() === '') {
+                            allRequiredFieldsFilled = false;
+                            authorInput.style.borderColor = '#ef4444';
+                        } else if (authorInput) {
+                            authorInput.style.borderColor = '';
+                        }
+
+                        if (titleInput && titleInput.hasAttribute('required') && titleInput.value.trim() === '') {
+                            allRequiredFieldsFilled = false;
+                            titleInput.style.borderColor = '#ef4444';
+                        } else if (titleInput) {
+                            titleInput.style.borderColor = '';
+                        }
+
+                        booksData.push({
+                            callNo: callNoInput ? callNoInput.value.trim() : '',
+                            author: authorInput ? authorInput.value.trim() : '',
+                            title: titleInput ? titleInput.value.trim() : ''
+                        });
+                    }
+                });
+
+                formData.books = booksData; // Add books array to main form data
+
+                if (!allRequiredFieldsFilled) {
+                    showMessage('Please fill in all required fields.', 'error');
+                    mainSubmitBtn.disabled = false;
+                    mainSubmitBtn.textContent = 'Submit';
+                    return;
+                }
+
+                // --- IMPORTANT: Google Apps Script Web App URL ---
+                // You MUST replace 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE' with the actual URL
+                // you get after deploying your Google Apps Script as a Web App (see instructions below).
+                const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbwTYTK3y9MRCD3GSXWJmx2XKuXv4NiUF0MbHWWTO_GD1UCIbuUBiKJ4L1cdw_D7MqyB3Q/exec'; // <<< Update this URL!
+                if (gasWebAppUrl === 'https://script.google.com/macros/s/AKfycbwTYTK3y9MRCD3GSXWJmx2XKuXv4NiUF0MbHWWTO_GD1UCIbuUBiKJ4L1cdw_D7MqyB3Q/exec' || !gasWebAppUrl.startsWith('https://script.google.com/macros/')) {
+                    showMessage('Error: Please deploy your Google Apps Script and update "gasWebAppUrl" in the HTML with the actual Web App URL.', 'error');
+                    mainSubmitBtn.disabled = false;
+                    mainSubmitBtn.textContent = 'Submit';
+                    return;
+                }
+
+                try {
+                    const response = await fetch(gasWebAppUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData), // Send the entire formData object
+                        mode: 'no-cors' // Required for simple POST requests to GAS from different origins
+                    });
+
+                    showMessage('Form data sent for submission. Check your Google Sheet!', 'success');
+                    // Consider form.reset() here if you want to clear the form after submission
+                    // form.reset(); // Uncomment this line if you want the form to reset
+                    
+                } catch (error) {
+                    console.error('Error sending data to Google Apps Script:', error);
+                    showMessage('An error occurred while submitting data. Please try again.', 'error');
+                } finally {
+                    mainSubmitBtn.disabled = false; // Always re-enable button
+                    mainSubmitBtn.textContent = 'Submit'; // Reset text
+                }
+            });
+
+            // Function to display messages (reused from previous examples)
+            function showMessage(message, type = 'success') {
+                messageBox.textContent = message;
+                messageBox.className = `message-box show ${type}`;
+                setTimeout(() => {
+                    messageBox.classList.remove('show');
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
