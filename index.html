@@ -458,49 +458,7 @@
                     }
                 }
             }
-            // Function to handle pasting data from spreadsheet
-            async function pasteDataFromSpreadsheet() {
-                try {
-                    // Prompt user for data
-                    const pastedData = prompt("Paste your spreadsheet data here (tab-separated columns, one row per line):\n\nExample:\nQC173.4\tLisa Randall\tWarped Passages\n");
-
-                    if (pastedData === null || pastedData.trim() === '') {
-                        showMessage('No data pasted.', 'info');
-                        return;
-                    }
-
-                    const rows = pastedData.trim().split('\n');
-                    
-                    // Clear existing rows before pasting if desired (optional)
-                    // If you want to replace all existing rows, uncomment the following:
-                    // while (booksTableBody.querySelectorAll('.book-row').length > 0) {
-                    //     booksTableBody.querySelector('.book-row').remove();
-                    // }
-                    // rowCount = 0; // Reset rowCount if clearing all rows
-
-                    rows.forEach(rowString => {
-                        const columns = rowString.split('\t'); // Assuming tab-separated values
-                        // Ensure we have at least 3 columns (Call No, Author, Title)
-                        const callNo = columns[0] ? columns[0].trim() : '';
-                        const author = columns[1] ? columns[1].trim() : '';
-                        const title = columns[2] ? columns[2].trim() : '';
-
-                        // Add new row with pasted data
-                        addNewBookRow(callNo, author, title);
-                    });
-
-                    // If the initial empty row was cleared, and no new rows were pasted, add one back
-                    if (booksTableBody.querySelectorAll('.book-row').length === 0) {
-                        addNewBookRow(); // Add an empty row if no data was pasted and table was cleared
-                    }
-
-                    showMessage('Data pasted successfully!', 'success');
-
-                } catch (error) {
-                    console.error('Error pasting data:', error);
-                    showMessage('Failed to paste data. Please ensure it is correctly formatted.', 'error');
-                }
-            }
+            
             // Function to clear all form fields and reset the book table
             function clearForm() {
                 // Clear text, email, and date inputs
@@ -532,7 +490,7 @@
             }
 
             // Event listener for "Paste from Spreadsheet" button
-            pasteFromSpreadsheetBtn.addEventListener('click', pasteDataFromSpreadsheet);
+            //pasteFromSpreadsheetBtn.addEventListener('click', pasteDataFromSpreadsheet);
 
             // Event listener for "Add new row" button
             addNewRowBtn.addEventListener('click', addNewBookRow);
