@@ -127,9 +127,83 @@
             color: #60a5fa; /* blue-400 */
             vertical-align: middle;
         }
+        /* Styles for the header from the image */
+    .app-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 2rem; /* Added margin to separate from the main content */
+    }
+
+    .app-header-left {
+        font-weight: 600;
+        color: #1e293b; /* slate-800 */
+        font-size: 1.125rem; /* text-lg */
+    }
+
+    .app-header-right {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .app-header-right a {
+        color: #475569; /* slate-600 */
+        font-weight: 500;
+        text-decoration: none;
+        position: relative;
+        padding-bottom: 0.25rem;
+        transition: color 0.2s ease-in-out;
+    }
+
+    .app-header-right a:hover {
+        color: #1e293b; /* slate-800 */
+    }
+
+    .app-header-right a.active {
+        color: #2563eb; /* blue-600 */
+    }
+
+    .app-header-right a.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #2563eb; /* blue-600 */
+    }
+
+    .search-icon {
+        font-size: 1.25rem;
+        color: #475569; /* slate-600 */
+        cursor: pointer;
+    }
+
+    .bookleggers-image {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 2rem auto; /* Center the image and add some margin */
+    }
     </style>
 </head>
 <body class="p-4 sm:p-6 lg:p-8">
+
+    <div class="app-header">
+    <div class="app-header-left">
+        Fremont Bookleggers
+    </div>
+    <div class="app-header-right">
+        <a href="#">Home</a>
+        <a href="#" class="active">For Bookleggers</a>
+        <a href="#">For Librarians</a>
+        <span class="search-icon">🔍</span>
+    </div>
+</div>
 
     <div class="max-w-4xl mx-auto space-y-8">
         <!-- Main Page Title and Description -->
@@ -137,6 +211,7 @@
             <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-2">Booklegger Presentation List</h1>
             <p class="text-md sm:text-lg text-slate-600">Please submit the list of books that you presented during your Booklegger visit. Each class should be submitted separately.</p>
         </header>
+        <img src="image_f5bce6.jpg" alt="Fremont Bookleggers walking books" class="bookleggers-image">
         <!-- Section 1: Booklegger Information -->
         <section class="form-section">
             <h3 class="text-xl font-semibold text-slate-800 mb-6">Booklegger information</h3>
