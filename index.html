@@ -505,6 +505,7 @@
 
             // Modified pasteDataFromSpreadsheet function to use the custom modal
               async function pasteDataFromSpreadsheet() {
+                  console.log('pasteDataFromSpreadsheet called.');
                 try {
                     const pastedData = await showPasteModal(); // Await the modal's result
 
