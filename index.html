@@ -569,9 +569,18 @@
                         } else {
                             element.style.borderColor = ''; // Reset border
                         }
-
+                        // Special handling for presentationDate to format it as MM/DD/YYYY
+                        if (name === 'presentationDate' && element.value.trim() !== '') {
+                            const date = new Date(element.value.trim()); // Parse YYYY-MM-DD
+                            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                            const day = date.getDate().toString().padStart(2, '0');
+                            const year = date.getFullYear();
+                            formData[name] = `${month}/${day}/${year}`; // Format as MM/DD/YYYY
+                        } else {
+                            formData[name] = element.value.trim();
+                        }
                         // Collect value
-                        formData[name] = element.value.trim();
+                        //formData[name] = element.value.trim();
                     }
                 });
 
