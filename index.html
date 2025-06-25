@@ -383,9 +383,14 @@
                 <h3 class="text-lg font-medium text-slate-800">
                     <span class="info-icon">&#x2139;</span> Enter the list of books you presented
                 </h3>
-                <button type="button" id="addNewRowBtn" class="flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium text-sm rounded-md shadow-sm transition-colors duration-200">
+                <div class="flex space-x-2"> <!-- Container for multiple buttons -->
+                    <button type="button" id="pasteFromSpreadsheetBtn" class="flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium text-sm rounded-md shadow-sm transition-colors duration-200">
+                        Paste from Spreadsheet
+                    </button>
+                    <button type="button" id="addNewRowBtn" class="flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium text-sm rounded-md shadow-sm transition-colors duration-200">
                     <span class="text-xl mr-1">+</span> Add new row
-                </button>
+                    </button>
+                </div>
             </div>
 
             <div class="overflow-x-auto rounded-lg shadow-sm border border-slate-200">
@@ -426,6 +431,7 @@
             const booksTableBody = document.querySelector('#booksTable tbody');
             const mainSubmitBtn = document.getElementById('mainSubmitBtn');
             const messageBox = document.getElementById('messageBox');
+            const gradeCheckboxesContainer = document.getElementById('gradeCheckboxes');
             let rowCount = 1; // Start at 1 because one row is already present in HTML
 
             // Function to add a new row to the books table
@@ -455,6 +461,52 @@
                     }
                 }
             }
+            // Function to handle pasting data from spreadsheet
+            async function pasteDataFromSpreadsheet() {
+                try {
+                    // Prompt user for data
+                    const pastedData = prompt("Paste your spreadsheet data here (tab-separated columns, one row per line):\n\nExample:\nQC173.4\tLisa Randall\tWarped Passages\n");
+
+                    if (pastedData === null || pastedData.trim() === '') {
+                        showMessage('No data pasted.', 'info');
+                        return;
+                    }
+
+                    const rows = pastedData.trim().split('\n');
+                    
+                    // Clear existing rows before pasting if desired (optional)
+                    // If you want to replace all existing rows, uncomment the following:
+                    // while (booksTableBody.querySelectorAll('.book-row').length > 0) {
+                    //     booksTableBody.querySelector('.book-row').remove();
+                    // }
+                    // rowCount = 0; // Reset rowCount if clearing all rows
+
+                    rows.forEach(rowString => {
+                        const columns = rowString.split('\t'); // Assuming tab-separated values
+                        // Ensure we have at least 3 columns (Call No, Author, Title)
+                        const callNo = columns[0] ? columns[0].trim() : '';
+                        const author = columns[1] ? columns[1].trim() : '';
+                        const title = columns[2] ? columns[2].trim() : '';
+
+                        // Add new row with pasted data
+                        addNewBookRow(callNo, author, title);
+                    });
+
+                    // If the initial empty row was cleared, and no new rows were pasted, add one back
+                    if (booksTableBody.querySelectorAll('.book-row').length === 0) {
+                        addNewBookRow(); // Add an empty row if no data was pasted and table was cleared
+                    }
+
+                    showMessage('Data pasted successfully!', 'success');
+
+                } catch (error) {
+                    console.error('Error pasting data:', error);
+                    showMessage('Failed to paste data. Please ensure it is correctly formatted.', 'error');
+                }
+            }
+
+            // Event listener for "Paste from Spreadsheet" button
+            pasteFromSpreadsheetBtn.addEventListener('click', pasteDataFromSpreadsheet);
 
             // Event listener for "Add new row" button
             addNewRowBtn.addEventListener('click', addNewBookRow);
@@ -492,6 +544,20 @@
                         formData[name] = element.value.trim();
                     }
                 });
+
+                // Collect selected grades from checkboxes
+                const selectedGrades = [];
+                const gradeCheckboxes = gradeCheckboxesContainer.querySelectorAll('input[name="gradeLevel"]:checked');
+                if (gradeCheckboxes.length === 0) {
+                    allRequiredFieldsFilled = false;
+                    gradeCheckboxesContainer.style.borderColor = '#ef4444'; // Highlight the container
+                } else {
+                    gradeCheckboxesContainer.style.borderColor = ''; // Reset border
+                    gradeCheckboxes.forEach(checkbox => {
+                        selectedGrades.push(checkbox.value);
+                    });
+                }
+                formData.gradeLevel = selectedGrades; // Store grades as an array
 
                 // Collect data from dynamically added book rows
                 const booksData = [];
