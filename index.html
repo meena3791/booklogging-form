@@ -584,6 +584,13 @@
             // Event listener for "Add new row" button
             addNewRowBtn.addEventListener('click', addNewBookRow);
 
+             // Event listener for "Paste from Spreadsheet" button
+            if (pasteFromSpreadsheetBtn) { // Ensure button exists before adding listener
+                pasteFromSpreadsheetBtn.addEventListener('click', pasteDataFromSpreadsheet);
+            } else {
+                console.error('Paste from Spreadsheet button not found!');
+            }
+
              // Add event listeners to initial delete buttons (if any exist)
             booksTableBody.querySelectorAll('.delete-row-btn').forEach(button => {
                 button.addEventListener('click', deleteBookRow);
