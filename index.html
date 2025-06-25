@@ -636,7 +636,7 @@
 
                     showMessage('Form data sent for submission. Check your Google Sheet!', 'success');
                     // Consider form.reset() here if you want to clear the form after submission
-                     form.reset(); // Uncomment this line if you want the form to reset
+                     clearForm(); // Uncomment this line if you want the form to reset
                     
                 } catch (error) {
                     console.error('Error sending data to Google Apps Script:', error);
