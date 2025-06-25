@@ -383,7 +383,10 @@
                 <h3 class="text-lg font-medium text-slate-800">
                     <span class="info-icon">&#x2139;</span> Enter the list of books you presented
                 </h3>
-                <div class="flex space-x-1"> <!-- Container for multiple buttons -->
+                <div class="flex space-x-2"> <!-- Container for multiple buttons -->
+                    <button type="button" id="pasteFromSpreadsheetBtn" class="flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium text-sm rounded-md shadow-sm transition-colors duration-200">
+                        Paste from Spreadsheet
+                    </button>
                     <button type="button" id="addNewRowBtn" class="flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium text-sm rounded-md shadow-sm transition-colors duration-200">
                     <span class="text-xl mr-1">+</span> Add new row
                     </button>
@@ -425,10 +428,19 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const addNewRowBtn = document.getElementById('addNewRowBtn');
+            const pasteFromSpreadsheetBtn = document.getElementById('pasteFromSpreadsheetBtn');
             const booksTableBody = document.querySelector('#booksTable tbody');
             const mainSubmitBtn = document.getElementById('mainSubmitBtn');
             const messageBox = document.getElementById('messageBox');
             const gradeCheckboxesContainer = document.getElementById('gradeCheckboxes');
+
+            // New modal element references
+            const pasteModalOverlay = document.getElementById('pasteModalOverlay');
+            const pasteTextArea = document.getElementById('pasteTextArea');
+            const modalOkBtn = document.getElementById('modalOkBtn');
+            const modalCancelBtn = document.getElementById('modalCancelBtn');
+            const modalCloseBtn = document.querySelector('#pasteModalOverlay .modal-close-btn');
+            
             let rowCount = 1; // Start at 1 because one row is already present in HTML
 
             // Function to add a new row to the books table
@@ -456,6 +468,80 @@
                     } else {
                         showMessage('Cannot delete the last row.', 'error');
                     }
+                }
+            }
+            
+// Function to show the modal and return a Promise with its result
+            function showPasteModal() {
+                return new Promise((resolve) => {
+                    pasteTextArea.value = ''; // Clear previous content
+                    pasteModalOverlay.classList.remove('hidden');
+
+                    const handleOk = () => {
+                        pasteModalOverlay.classList.add('hidden');
+                        resolve(pasteTextArea.value);
+                        removeListeners();
+                    };
+
+                    const handleCancel = () => {
+                        pasteModalOverlay.classList.add('hidden');
+                        resolve(null); // Resolve with null if cancelled
+                        removeListeners();
+                    };
+
+                    // Add event listeners for modal buttons
+                    modalOkBtn.addEventListener('click', handleOk);
+                    modalCancelBtn.addEventListener('click', handleCancel);
+                    modalCloseBtn.addEventListener('click', handleCancel); // Close button also cancels
+
+                    // Function to remove event listeners to prevent duplicates
+                    const removeListeners = () => {
+                        modalOkBtn.removeEventListener('click', handleOk);
+                        modalCancelBtn.removeEventListener('click', handleCancel);
+                        modalCloseBtn.removeEventListener('click', handleCancel);
+                    };
+                });
+            }
+
+            // Modified pasteDataFromSpreadsheet function to use the custom modal
+              async function pasteDataFromSpreadsheet() {
+                try {
+                    const pastedData = await showPasteModal(); // Await the modal's result
+
+                    if (pastedData === null || pastedData.trim() === '') {
+                        showMessage('No data pasted or operation cancelled.', 'info');
+                        return;
+                    }
+
+                    const rows = pastedData.trim().split('\n');
+                    
+                    // Clear all existing book rows before pasting
+                    while (booksTableBody.querySelectorAll('.book-row').length > 0) {
+                        booksTableBody.querySelector('.book-row').remove();
+                    }
+                    rowCount = 0; // Reset rowCount after clearing all rows
+
+                    rows.forEach(rowString => {
+                        const columns = rowString.split('\t'); // Assuming tab-separated values
+                        // Ensure we have at least 3 columns (Call No, Author, Title)
+                        const callNo = columns[0] ? columns[0].trim() : '';
+                        const author = columns[1] ? columns[1].trim() : '';
+                        const title = columns[2] ? columns[2].trim() : '';
+
+                        // Add new row with pasted data
+                        addNewBookRow(callNo, author, title);
+                    });
+
+                    // If no data was pasted or all pasted rows were empty, add one back
+                    if (booksTableBody.querySelectorAll('.book-row').length === 0) {
+                        addNewBookRow(); // Add an empty row if no data was pasted and table was cleared
+                    }
+
+                    showMessage('Data pasted successfully!', 'success');
+
+                } catch (error) {
+                    console.error('Error pasting data:', error);
+                    showMessage('Failed to paste data. Please ensure it is correctly formatted.', 'error');
                 }
             }
             
@@ -491,6 +577,9 @@
 
             // Event listener for "Paste from Spreadsheet" button
             //pasteFromSpreadsheetBtn.addEventListener('click', pasteDataFromSpreadsheet);
+
+            // Event listener for "Paste from Spreadsheet" button
+            pasteFromSpreadsheetBtn.addEventListener('click', pasteDataFromSpreadsheet);
 
             // Event listener for "Add new row" button
             addNewRowBtn.addEventListener('click', addNewBookRow);
