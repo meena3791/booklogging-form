@@ -698,7 +698,7 @@
                             console.log('Skipping empty row string.');
                             return;
                         }
-                        const columns = rowString.split('\t'); // Assuming tab-separated values
+                        const columns = rowString.split(/[\t]|\s{2,}/); // Assuming tab-separated values
                         console.log(`Processing row: "${rowString}" -> Columns:`, columns);
                         // Ensure we have at least 3 columns (Call No, Author, Title)
                         const callNo = columns[0] ? columns[0].trim() : '';
