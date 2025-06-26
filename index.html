@@ -539,7 +539,7 @@
             let rowCount = 0; // Start at 1 because one row is already present in HTML
 
             // Function to add a new row to the books table
-            function addNewBookRow() {
+            function addNewBookRow(callNo = '', author = '', title = '') {
                 console.log('addNewBookRow called with:', { callNo, author, title, current_rowCount: rowCount });
                 const newRow = document.createElement('tr');
                 newRow.className = 'book-row';
