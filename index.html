@@ -470,12 +470,12 @@
                     </thead>
                     <tbody>
                         <!-- Initial row for book entry -->
-                        <tr class="book-row">
+                        <!--<tr class="book-row">
                             <td><input type="text" name="callNo_0" placeholder="e.g., QC173.4" required></td>
                             <td><input type="text" name="author_0" placeholder="e.g., Lisa Randall" required></td>
                             <td><input type="text" name="title_0" placeholder="e.g., Warped Passages" required></td>
-                            <!--<td><button type="button" class="delete-row-btn">x</button></td>-->
-                        </tr>
+                            <!--<td><button type="button" class="delete-row-btn">x</button></td>
+                        </tr>-->
                     </tbody>
                 </table>
             </div>
@@ -531,23 +531,84 @@
             console.log('pasteFromSpreadsheetBtn:', pasteFromSpreadsheetBtn);
             console.log('pasteModalOverlay:', pasteModalOverlay);
             console.log('pasteTextArea:', pasteTextArea);
+            console.log('modalOkBtn:', modalOkBtn);
+            console.log('modalCancelBtn:', modalCancelBtn);
+            console.log('modalCloseBtn:', modalCloseBtn);
+            console.log('booksTableBody:', booksTableBody);
             
-            let rowCount = 1; // Start at 1 because one row is already present in HTML
+            let rowCount = 0; // Start at 1 because one row is already present in HTML
 
             // Function to add a new row to the books table
             function addNewBookRow() {
+                console.log('addNewBookRow called with:', { callNo, author, title, current_rowCount: rowCount });
                 const newRow = document.createElement('tr');
                 newRow.className = 'book-row';
-                newRow.innerHTML = `
-                    <td><input type="text" name="callNo_${rowCount}" placeholder="e.g., QC173.4"></td>
-                    <td><input type="text" name="author_${rowCount}" placeholder="e.g., Lisa Randall"></td>
-                    <td><input type="text" name="title_${rowCount}" placeholder="e.g., Warped Passages"></td>
-                    <td><button type="button" class="delete-row-btn">x</button></td>
-                `;
-                booksTableBody.appendChild(newRow);
+                // Create table data cells
+                const tdCallNo = document.createElement('td');
+                const inputCallNo = document.createElement('input');
+                inputCallNo.type = 'text';
+                inputCallNo.name = `callNo_${rowCount}`; // Use dynamic name
+                inputCallNo.placeholder = 'e.g., QC173.4';
+                inputCallNo.value = callNo; // Set value directly
+                inputCallNo.required = true;
+                inputCallNo.className = 'block w-full px-3.5 py-2.5 border border-slate-300 rounded-md bg-white font-size-1rem line-height-1.5rem text-slate-700'; // Apply Tailwind classes
+                tdCallNo.appendChild(inputCallNo);
+                newRow.appendChild(tdCallNo);
+
+                const tdAuthor = document.createElement('td');
+                const inputAuthor = document.createElement('input');
+                inputAuthor.type = 'text';
+                inputAuthor.name = `author_${rowCount}`;
+                inputAuthor.placeholder = 'e.g., Lisa Randall';
+                inputAuthor.value = author;
+                inputAuthor.required = true;
+                inputAuthor.className = 'block w-full px-3.5 py-2.5 border border-slate-300 rounded-md bg-white font-size-1rem line-height-1.5rem text-slate-700';
+                tdAuthor.appendChild(inputAuthor);
+                newRow.appendChild(tdAuthor);
+
+                const tdTitle = document.createElement('td');
+                const inputTitle = document.createElement('input');
+                inputTitle.type = 'text';
+                inputTitle.name = `title_${rowCount}`;
+                inputTitle.placeholder = 'e.g., Warped Passages';
+                inputTitle.value = title;
+                inputTitle.required = true;
+                inputTitle.className = 'block w-full px-3.5 py-2.5 border border-slate-300 rounded-md bg-white font-size-1rem line-height-1.5rem text-slate-700';
+                tdTitle.appendChild(inputTitle);
+                newRow.appendChild(tdTitle);
+
+                const tdDelete = document.createElement('td');
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.className = 'delete-row-btn'; // Apply existing CSS class
+                deleteButton.textContent = 'X';
+                deleteButton.addEventListener('click', deleteBookRow);
+                tdDelete.appendChild(deleteButton);
+                newRow.appendChild(tdDelete);
+
+                if (booksTableBody) {
+                    booksTableBody.appendChild(newRow);
+                    console.log('New row appended to booksTableBody. Current tbody child count:', booksTableBody.children.length);
+                    // After appending, check the input element's value property directly
+                    // This query should now work
+                    const addedCallNoInput = newRow.querySelector(`input[name="callNo_${rowCount}"]`);
+                    if (addedCallNoInput) {
+                        console.log(`Value property of callNo_${rowCount} after append:`, addedCallNoInput.value);
+                    }
+                } else {
+                    console.error('booksTableBody is null! Cannot append new row.');
+                    showMessage('Error: Table body not found, cannot add rows.', 'error');
+                }
+                //newRow.innerHTML = `
+                   // <td><input type="text" name="callNo_${rowCount}" placeholder="e.g., QC173.4"></td>
+                   // <td><input type="text" name="author_${rowCount}" placeholder="e.g., Lisa Randall"></td>
+                   // <td><input type="text" name="title_${rowCount}" placeholder="e.g., Warped Passages"></td>
+                   // <td><button type="button" class="delete-row-btn">x</button></td>
+                //`;
+               // booksTableBody.appendChild(newRow);
                 rowCount++;
                 // Add event listener to the new delete button
-                newRow.querySelector('.delete-row-btn').addEventListener('click', deleteBookRow);
+                //newRow.querySelector('.delete-row-btn').addEventListener('click', deleteBookRow);
             }
              // Function to delete a row from the books table
             function deleteBookRow(event) {
@@ -714,6 +775,10 @@
             } else {
                 console.error('Paste from Spreadsheet button not found!');
             }
+            / IMPORTANT: Create the initial row using the function now
+            // This ensures all rows are consistently created.
+            // Removed the static <tr> from HTML and replaced with this:
+            addNewBookRow();
 
              // Add event listeners to initial delete buttons (if any exist)
             booksTableBody.querySelectorAll('.delete-row-btn').forEach(button => {
