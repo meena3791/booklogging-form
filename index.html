@@ -425,6 +425,26 @@
     <!-- Message box for user feedback -->
     <div id="messageBox" class="message-box"></div>
 
+    <!-- Custom Modal for Paste from Spreadsheet -->
+    <div id="pasteModalOverlay" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="text-xl font-semibold">Paste Spreadsheet Data</h4>
+                <button type="button" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="text-slate-700 mb-2">Paste your spreadsheet data here (tab-separated columns, one row per line):</p>
+                <textarea id="pasteTextArea" rows="10" class="w-full p-2 border rounded-md font-mono text-sm"></textarea>
+                <p class="text-sm text-slate-500 mt-2">Example:</p>
+                <pre class="bg-slate-100 p-2 rounded-md text-sm text-slate-700">QC173.4\tLisa Randall\tWarped Passages</pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modalCancelBtn" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-md text-gray-800 font-medium">Cancel</button>
+                <button type="button" id="modalOkBtn" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium">Paste</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const addNewRowBtn = document.getElementById('addNewRowBtn');
