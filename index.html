@@ -512,6 +512,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOMContentLoaded fired.');
             const addNewRowBtn = document.getElementById('addNewRowBtn');
             const pasteFromSpreadsheetBtn = document.getElementById('pasteFromSpreadsheetBtn');
             const booksTableBody = document.querySelector('#booksTable tbody');
@@ -525,6 +526,11 @@
             const modalOkBtn = document.getElementById('modalOkBtn');
             const modalCancelBtn = document.getElementById('modalCancelBtn');
             const modalCloseBtn = document.querySelector('#pasteModalOverlay .modal-close-btn');
+
+            // Log if key elements are found
+            console.log('pasteFromSpreadsheetBtn:', pasteFromSpreadsheetBtn);
+            console.log('pasteModalOverlay:', pasteModalOverlay);
+            console.log('pasteTextArea:', pasteTextArea);
             
             let rowCount = 1; // Start at 1 because one row is already present in HTML
 
@@ -558,6 +564,18 @@
             
 // Function to show the modal and return a Promise with its result
             function showPasteModal() {
+                console.log('showPasteModal called.'); // Confirm function call
+                if (pasteModalOverlay && pasteTextArea) { // Check both modal overlay and textarea
+                    pasteTextArea.value = ''; // Clear previous content
+                    pasteModalOverlay.classList.remove('hidden'); // Show the modal
+                    console.log('Modal display changed to block.');
+                    pasteTextArea.focus(); // Set focus to the textarea for immediate pasting
+                } else {
+                    console.error('Modal overlay or textarea element not found!');
+                    showMessage('Error: Paste modal components not found. Please refresh.', 'error');
+                    return Promise.resolve(null); // Resolve immediately with null if modal missing
+                }
+                
                 return new Promise((resolve) => {
                     pasteTextArea.value = ''; // Clear previous content
                     pasteModalOverlay.classList.remove('hidden');
@@ -599,28 +617,48 @@
                         return;
                     }
 
-                    const rows = pastedData.trim().split('\n');
+// Normalize newline characters to handle data copied from different OS (e.g., Windows \r\n vs Unix \n)
+                    const normalizedData = pastedData.replace(/\r/g, ''); // Remove carriage returns
+                    console.log('Normalized data (after \\r removal):', normalizedData);
+
+                    const rows = normalizedData.trim().split('\n');
+                    console.log('Split into rows:', rows);
                     
                     // Clear all existing book rows before pasting
                     while (booksTableBody.querySelectorAll('.book-row').length > 0) {
                         booksTableBody.querySelector('.book-row').remove();
                     }
                     rowCount = 0; // Reset rowCount after clearing all rows
+                    console.log('Existing rows cleared, rowCount reset to 0.');
 
                     rows.forEach(rowString => {
+                         // Skip empty lines that might result from extra newlines after trim()
+                        if (rowString.trim() === '') {
+                            console.log('Skipping empty row string.');
+                            return;
+                        }
                         const columns = rowString.split('\t'); // Assuming tab-separated values
+                        console.log(`Processing row: "${rowString}" -> Columns:`, columns);
                         // Ensure we have at least 3 columns (Call No, Author, Title)
                         const callNo = columns[0] ? columns[0].trim() : '';
                         const author = columns[1] ? columns[1].trim() : '';
                         const title = columns[2] ? columns[2].trim() : '';
 
                         // Add new row with pasted data
-                        addNewBookRow(callNo, author, title);
+                        if (callNo || author || title) {
+                            addNewBookRow(callNo, author, title);
+                            dataAdded = true;
+                            console.log(`Added row successfully: CallNo="${callNo}", Author="${author}", Title="${title}"`);
+                        } else {
+                            console.log('Skipping line with no content after parsing:', rowString);
+                        }
                     });
 
                     // If no data was pasted or all pasted rows were empty, add one back
-                    if (booksTableBody.querySelectorAll('.book-row').length === 0) {
+                    if (!dataAdded && booksTableBody.querySelectorAll('.book-row').length === 0) {
                         addNewBookRow(); // Add an empty row if no data was pasted and table was cleared
+                        console.log('No data was pasted, added back one empty row.');
+                        
                     }
 
                     showMessage('Data pasted successfully!', 'success');
