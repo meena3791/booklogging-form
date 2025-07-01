@@ -299,6 +299,8 @@
             const numClassesSelect = document.getElementById('numClasses');
             const additionalCommentsTextarea = document.getElementById('additionalComments');
 
+            const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw27nDG8nuY9CP0M0logpcdc33diI0B7cWbDgMIUsNRnjKuDfJXiefNGse8ICrGv2o2Wg/exec';
+
 
             // Function to manage visibility of main sections based on "Are you booklogging next semester?" selection
             function toggleMainSectionsVisibility() {
@@ -358,19 +360,23 @@
                 continueRadioNo.addEventListener('change', toggleContinueBookloggingMessages);
             }
 
-           // Event listener for the "Submit" button in the availability section
-            
+            // Event listener for the "Submit" button in the availability section
             if (submitAvailabilityBtn) {
-                submitAvailabilityBtn.addEventListener('click', function() {
-                    // ... inside your submitAvailabilityBtn.addEventListener('click', function() { ...
+                submitAvailabilityBtn.addEventListener('click', async function() { // Added 'async' keyword
+                    // Hide any previous messages
+                    submissionSuccessMessage.style.display = 'none';
+                    submissionErrorMessage.style.display = 'none';
+
+                    // Gather data from the form
                     const name = nameInput.value;
                     const email = emailInput.value;
                     const selectedGrades = Array.from(document.querySelectorAll('#availabilitySection input[type="checkbox"]:checked'))
-                                    .map(cb => cb.value)
-                                    .join(', ');
+                                                .map(cb => cb.value)
+                                                .join(', ');
                     const numClasses = numClassesSelect.value;
                     const comments = additionalCommentsTextarea.value;
-        
+
+                    // Construct the data payload for the Google Apps Script
                     const formData = {
                         name: name,
                         email: email,
@@ -379,34 +385,44 @@
                         comments: comments
                     };
 
-                    // Replace 'YOUR_GAS_WEB_APP_URL' with the actual URL from your deployed GAS
-                    fetch('https://script.google.com/macros/s/AKfycbw27nDG8nuY9CP0M0logpcdc33diI0B7cWbDgMIUsNRnjKuDfJXiefNGse8ICrGv2o2Wg/exec', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(formData),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success:', data);
-                        // Display your success message here
-                        submissionDetails.innerHTML = `
-                            <p><strong>Name:</strong> ${name || 'N/A'}</p>
-                            <p><strong>Email:</strong> ${email || 'N/A'}</p>
-                            <p><strong>Grades Selected:</strong> ${selectedGrades || 'None'}</p>
-                            <p><strong>Number of Classes:</strong> ${numClasses || 'N/A'}</p>
-                            <p><strong>Additional Comments:</strong> ${comments || 'None'}</p>
-                        `;
-                        availabilitySection.style.display = 'none';
-                        submissionSuccessMessage.style.display = 'block';
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                        // Handle error, e.g., display an error message to the user
-                    });
-                })}
-// ... rest of your existing success message display logic
+                    try {
+                        const response = await fetch(GAS_WEB_APP_URL, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                // No 'Access-Control-Allow-Origin' header needed here,
+                                // it's handled by the server (GAS deployment settings).
+                            },
+                            body: JSON.stringify(formData),
+                        });
+
+                        const result = await response.json(); // Assuming GAS returns JSON
+
+                        if (result.status === 'success') {
+                            // Construct the detailed message for success
+                            let detailsHtml = `
+                                <p><strong>Name:</strong> ${name || 'N/A'}</p>
+                                <p><strong>Email:</strong> ${email || 'N/A'}</p>
+                                <p><strong>Grades Selected:</strong> ${selectedGrades || 'None'}</p>
+                                <p><strong>Number of Classes:</strong> ${numClasses || 'N/A'}</p>
+                                <p><strong>Additional Comments:</strong> ${comments || 'None'}</p>
+                            `;
+                            submissionDetails.innerHTML = detailsHtml;
+                            availabilitySection.style.display = 'none'; // Hide the form
+                            submissionSuccessMessage.style.display = 'block'; // Show success message
+                        } else {
+                            // Handle error response from GAS
+                            errorMessageContent.textContent = result.message || 'An unknown error occurred on the server.';
+                            submissionErrorMessage.style.display = 'block'; // Show error message
+                        }
+                    } catch (error) {
+                        // Handle network errors or issues with the fetch request itself
+                        console.error('Fetch error:', error);
+                        errorMessageContent.textContent = `Network error or server unreachable: ${error.message}`;
+                        submissionErrorMessage.style.display = 'block'; // Show error message
+                    }
+                });
+            }
 
             // Event listeners for the info modal
             if (infoIcon) {
