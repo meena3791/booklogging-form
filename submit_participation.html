@@ -363,49 +363,49 @@
             if (submitAvailabilityBtn) {
                 submitAvailabilityBtn.addEventListener('click', function() {
                     // ... inside your submitAvailabilityBtn.addEventListener('click', function() { ...
-const name = nameInput.value;
-const email = emailInput.value;
-const selectedGrades = Array.from(document.querySelectorAll('#availabilitySection input[type="checkbox"]:checked'))
-                            .map(cb => cb.value)
-                            .join(', ');
-const numClasses = numClassesSelect.value;
-const comments = additionalCommentsTextarea.value;
+                    const name = nameInput.value;
+                    const email = emailInput.value;
+                    const selectedGrades = Array.from(document.querySelectorAll('#availabilitySection input[type="checkbox"]:checked'))
+                                    .map(cb => cb.value)
+                                    .join(', ');
+                    const numClasses = numClassesSelect.value;
+                    const comments = additionalCommentsTextarea.value;
+        
+                    const formData = {
+                        name: name,
+                        email: email,
+                        grades: selectedGrades,
+                        numClasses: numClasses,
+                        comments: comments
+                    };
 
-const formData = {
-    name: name,
-    email: email,
-    grades: selectedGrades,
-    numClasses: numClasses,
-    comments: comments
-};
-
-// Replace 'YOUR_GAS_WEB_APP_URL' with the actual URL from your deployed GAS
-fetch('https://script.google.com/macros/s/AKfycbzUxTXT7tdJs6pUcTOcj6XtPdEmBd9jIiB75MIvJDz1-BM7C3ghHeakklygJcFWToz6-w/exec', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(formData),
-})
-.then(response => response.json())
-.then(data => {
-    console.log('Success:', data);
-    // Display your success message here
-    submissionDetails.innerHTML = `
-        <p><strong>Name:</strong> ${name || 'N/A'}</p>
-        <p><strong>Email:</strong> ${email || 'N/A'}</p>
-        <p><strong>Grades Selected:</strong> ${selectedGrades || 'None'}</p>
-        <p><strong>Number of Classes:</strong> ${numClasses || 'N/A'}</p>
-        <p><strong>Additional Comments:</strong> ${comments || 'None'}</p>
-    `;
-    availabilitySection.style.display = 'none';
-    submissionSuccessMessage.style.display = 'block';
-})
-.catch((error) => {
-    console.error('Error:', error);
-    // Handle error, e.g., display an error message to the user
-});
-             )   }}
+                    // Replace 'YOUR_GAS_WEB_APP_URL' with the actual URL from your deployed GAS
+                    fetch('https://script.google.com/macros/s/AKfycbzUxTXT7tdJs6pUcTOcj6XtPdEmBd9jIiB75MIvJDz1-BM7C3ghHeakklygJcFWToz6-w/exec', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        // Display your success message here
+                        submissionDetails.innerHTML = `
+                            <p><strong>Name:</strong> ${name || 'N/A'}</p>
+                            <p><strong>Email:</strong> ${email || 'N/A'}</p>
+                            <p><strong>Grades Selected:</strong> ${selectedGrades || 'None'}</p>
+                            <p><strong>Number of Classes:</strong> ${numClasses || 'N/A'}</p>
+                            <p><strong>Additional Comments:</strong> ${comments || 'None'}</p>
+                        `;
+                        availabilitySection.style.display = 'none';
+                        submissionSuccessMessage.style.display = 'block';
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        // Handle error, e.g., display an error message to the user
+                    });
+                })}
 // ... rest of your existing success message display logic
 
             // Event listeners for the info modal
