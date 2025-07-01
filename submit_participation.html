@@ -99,7 +99,7 @@
 
         <!-- Back Button -->
         <div class="mb-6">
-            <a href="#" class="text-blue-600 hover:underline flex items-center">
+            <a href="#" id="backLink" class="text-blue-600 hover:underline flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
@@ -356,6 +356,42 @@
                 }
             }
 
+            // Function to reset the form to its initial empty state
+            function resetForm() {
+                // Clear input fields
+                nameInput.value = '';
+                emailInput.value = '';
+                additionalCommentsTextarea.value = '';
+
+                // Uncheck radio buttons
+                if (radioYes) radioYes.checked = false;
+                if (radioNo) radioNo.checked = false;
+                if (continueRadioYes) continueRadioYes.checked = false;
+                if (continueRadioNo) continueRadioNo.checked = false;
+
+                // Uncheck all grade preference checkboxes
+                gradeCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+
+                // Reset select dropdown
+                numClassesSelect.value = ''; // Set to the value of the "Select grade" option, which is empty
+
+                // Hide all dynamic sections and messages
+                availabilitySection.style.display = 'none';
+                continueBookloggingSection.style.display = 'none';
+                continueBookloggingYesMessage.style.display = 'none';
+                continueBookloggingNoMessage.style.display = 'none';
+                submissionSuccessMessage.style.display = 'none';
+                submissionErrorMessage.style.display = 'none';
+
+                // Ensure the submit button is reset to its default state
+                submitButtonText.classList.remove('hidden');
+                submitButtonLoader.classList.add('hidden');
+                submitAvailabilityBtn.disabled = false;
+                submitAvailabilityBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+
             // Add event listeners to the main radio buttons
             if (radioYes) {
                 radioYes.addEventListener('change', toggleMainSectionsVisibility);
@@ -434,6 +470,14 @@
                         errorMessageContent.textContent = `Network error or server unreachable: ${error.message}`;
                         submissionErrorMessage.style.display = 'block'; // Show error message
                     }
+                });
+            }
+
+            // Event listener for the "Back" link
+            if (backLink) {
+                backLink.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent default link behavior (page reload)
+                    resetForm(); // Call the reset function
                 });
             }
 
