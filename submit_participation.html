@@ -45,7 +45,7 @@
         }
         /* Hidden by default, shown by JavaScript */
         #availabilitySection, #continueBookloggingSection,
-        #continueBookloggingYesMessage, #continueBookloggingNoMessage {
+        #continueBookloggingYesMessage, #continueBookloggingNoMessage, #submissionSuccessMessage {
             display: none;
         }
     </style>
@@ -241,6 +241,12 @@
             <p>Please feel free to reach out in future, if interested.</p>
         </div>
 
+         <!-- Submission Success Message -->
+        <div id="submissionSuccessMessage" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md shadow-md mb-8" role="alert">
+            <p class="font-bold">Thank you for your submission.</p>
+            <p>We will email you the class assignments for next semester.</p>
+        </div>
+
         <!-- Footer -->
         <footer class="text-center text-gray-500 text-sm mt-8">
             <p>The Booklegger Program is a volunteer effort supported by the Fremont Branch of the Alameda County Library.</p>
@@ -283,6 +289,9 @@
             const infoModal = document.getElementById('infoModal');
             const closeModalBtn = document.getElementById('closeModalBtn');
 
+            const submitAvailabilityBtn = document.getElementById('submitAvailabilityBtn'); // New: Get the submit button
+            const submissionSuccessMessage = document.getElementById('submissionSuccessMessage'); // New: Get the success message div
+
 
             // Function to manage visibility of main sections based on "Are you booklogging next semester?" selection
             function toggleMainSectionsVisibility() {
@@ -292,6 +301,8 @@
                     // Hide messages when main sections change
                     continueBookloggingYesMessage.style.display = 'none';
                     continueBookloggingNoMessage.style.display = 'none';
+                    submissionSuccessMessage.style.display = 'none';
+                    
                 } else if (radioNo.checked) {
                     availabilitySection.style.display = 'none';
                     continueBookloggingSection.style.display = 'block';
@@ -310,6 +321,8 @@
 
             // Function to manage visibility of messages based on "Are you planning to continue booklogging?" selection
             function toggleContinueBookloggingMessages() {
+                // Hide success message when continue booklogging radio changes
+                submissionSuccessMessage.style.display = 'none';
                 if (continueRadioYes.checked) {
                     continueBookloggingYesMessage.style.display = 'block';
                     continueBookloggingNoMessage.style.display = 'none';
@@ -336,6 +349,16 @@
             }
             if (continueRadioNo) {
                 continueRadioNo.addEventListener('change', toggleContinueBookloggingMessages);
+            }
+
+            // Event listener for the "Submit" button in the availability section
+            if (submitAvailabilityBtn) {
+                submitAvailabilityBtn.addEventListener('click', function() {
+                    // Hide the availability section
+                    availabilitySection.style.display = 'none';
+                    // Display the success message
+                    submissionSuccessMessage.style.display = 'block';
+                });
             }
 
             // Event listeners for the info modal
