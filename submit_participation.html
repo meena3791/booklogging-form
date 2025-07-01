@@ -244,6 +244,7 @@
          <!-- Submission Success Message -->
         <div id="submissionSuccessMessage" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md shadow-md mb-8" role="alert">
             <p class="font-bold">Thank you for your submission.</p>
+            <p id="submissionDetails"></p> <!-- This will be populated by JavaScript -->
             <p>We will email you the class assignments for next semester.</p>
         </div>
 
@@ -351,9 +352,30 @@
                 continueRadioNo.addEventListener('change', toggleContinueBookloggingMessages);
             }
 
-            // Event listener for the "Submit" button in the availability section
+           // Event listener for the "Submit" button in the availability section
             if (submitAvailabilityBtn) {
                 submitAvailabilityBtn.addEventListener('click', function() {
+                    // Gather data from the form
+                    const name = nameInput.value;
+                    const email = emailInput.value;
+                    const selectedGrades = Array.from(document.querySelectorAll('#availabilitySection input[type="checkbox"]:checked'))
+                                                .map(cb => cb.value)
+                                                .join(', ');
+                    const numClasses = numClassesSelect.value;
+                    const comments = additionalCommentsTextarea.value;
+
+                    // Construct the detailed message
+                    let detailsHtml = `
+                        <p><strong>Name:</strong> ${name || 'N/A'}</p>
+                        <p><strong>Email:</strong> ${email || 'N/A'}</p>
+                        <p><strong>Grades Selected:</strong> ${selectedGrades || 'None'}</p>
+                        <p><strong>Number of Classes:</strong> ${numClasses || 'N/A'}</p>
+                        <p><strong>Additional Comments:</strong> ${comments || 'None'}</p>
+                    `;
+
+                    // Populate the submissionDetails div
+                    submissionDetails.innerHTML = detailsHtml;
+
                     // Hide the availability section
                     availabilitySection.style.display = 'none';
                     // Display the success message
