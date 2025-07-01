@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booklegger Participation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        /* Hidden by default, shown by JavaScript */
+        #availabilitySection, #continueBookloggingSection,
+        #continueBookloggingYesMessage, #continueBookloggingNoMessage {
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-8">
+
+    <!-- Top Navigation Bar -->
+    <header class="w-full bg-white shadow-sm py-4 px-6 flex justify-between items-center fixed top-0 z-10">
+        <div class="flex items-center space-x-2">
+            <!--<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001 1h3v-9a1 1 0 011-1h2a1 1 0 011 1v9h3a1 1 0 001-1v-9m-9 0h.01"></path>
+            </svg>-->
+            <a href="https://sites.google.com/view/fremont-bookleggers/home?authuser=0" class="text-gray-700 hover:underline">Home</a>
+        </div>
+        <nav class="flex items-center space-x-6">
+            <a href="https://sites.google.com/view/fremont-bookleggers/for-bookleggers?authuser=0" class="text-gray-700 hover:underline">For Booklegger</a>
+            <a href="https://sites.google.com/view/fremont-bookleggers/for-librarians?authuser=0" class="text-blue-600 hover:underline font-medium">For Librarian</a>
+            <!--<a href="#" class="text-gray-700 hover:underline">Help</a>-->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="container mx-auto mt-20 px-4 max-w-4xl">
+
+        <!-- Booklegger Logo and Search -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8 flex flex-col md:flex-row items-center justify-between">
+            <img src="booklegger image.jpeg" alt="Booklegger Logo" class="mb-4 md:mb-0 md:mr-6 rounded-lg">
+            <div class="flex items-center border border-gray-300 rounded-md overflow-hidden w-full md:w-auto">
+                <input type="text" placeholder="Search here" class="px-4 py-2 flex-grow focus:outline-none text-gray-700">
+                <button class="bg-gray-100 p-2 border-l border-gray-300 hover:bg-gray-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Submit your participation Section -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <div class="flex items-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <h2 class="text-2xl font-semibold text-gray-800">Submit your participation</h2>
+            </div>
+            <p class="text-blue-600 hover:underline">Please mark your availability for your next booklegging event.</p>
+        </div>
+
+        <!-- Back Button -->
+        <div class="mb-6">
+            <a href="#" class="text-blue-600 hover:underline flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back
+            </a>
+        </div>
+
+        <!-- Booklegger Information Form -->
+        <div class="bg-blue-50 p-6 rounded-lg shadow-md mb-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Booklegger information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-center">
+                    <label for="name" class="w-24 text-gray-700">Name</label>
+                    <input type="text" id="name" class="flex-grow border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+                <div class="flex items-center">
+                    <label for="email" class="w-24 text-gray-700">Email</label>
+                    <input type="email" id="email" class="flex-grow border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+            </div>
+        </div>
+
+        <!-- Decision Message -->
+        <p class="text-gray-600 mb-8">If you want more time to make a decision, record your submission later.</p>
+
+        <!-- Are you booklogging next semester? -->
+        <div class="bg-blue-50 p-6 rounded-lg shadow-md mb-8 flex flex-col items-start">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Are you booklegging next semester?</h3>
+            <div class="flex items-center space-x-6 mb-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" class="form-radio h-5 w-5 text-blue-600" name="bookloggingNextSemester" value="yes" id="radioYes">
+                    <span class="ml-2 text-gray-700">Yes</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" class="form-radio h-5 w-5 text-blue-600" name="bookloggingNextSemester" value="no" id="radioNo">
+                    <span class="ml-2 text-gray-700">No</span>
+                </label>
+            </div>
+            <!--<div class="self-end">
+                <button class="text-blue-600 hover:underline">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </button>
+            </div>-->
+        </div>
+
+        <!-- Section: Select your availability and grades you'd like to bookleg -->
+        <div id="availabilitySection" class="bg-blue-50 p-6 rounded-lg shadow-md mb-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Select your availability and grades you'd like to bookleg</h3>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Select your grade preference</label>
+                <div class="flex flex-wrap gap-4">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600" value="2">
+                        <span class="ml-2 text-gray-700">2</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600" value="3">
+                        <span class="ml-2 text-gray-700">3</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600" value="4">
+                        <span class="ml-2 text-gray-700">4</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600" value="5">
+                        <span class="ml-2 text-gray-700">5</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600" value="Other">
+                        <span class="ml-2 text-gray-700">Other</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-4 flex items-center">
+                <label for="numClasses" class="w-32 text-gray-700">No. of classess</label>
+                <select id="numClasses" class="flex-grow border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <option value="">Select grade</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="More than 5">More than 5</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="additionalComments" class="block text-gray-700 text-sm font-bold mb-2 flex items-center">
+                    Additional comments
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </label>
+                <textarea id="additionalComments" rows="4" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+            </div>
+
+            <div class="text-center mt-6">
+                <button class="bg-blue-600 text-white px-8 py-3 rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    Submit
+                </button>
+            </div>
+        </div>
+
+        <!-- Section: Are you planning to continue booklogging? -->
+        <div id="continueBookloggingSection" class="bg-blue-50 p-6 rounded-lg shadow-md mb-8 flex flex-col items-start">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Are you planning to continue booklegging ?</h3>
+            <div class="flex items-center space-x-6 mb-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" class="form-radio h-5 w-5 text-blue-600" name="continueBooklogging" value="yes" id="continueRadioYes">
+                    <span class="ml-2 text-gray-700">Yes</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" class="form-radio h-5 w-5 text-blue-600" name="continueBooklogging" value="no" id="continueRadioNo">
+                    <span class="ml-2 text-gray-700">No</span>
+                </label>
+            </div>
+            <!--<p class="text-gray-600 mb-4">Please make a selection</p>-->
+            <!--<div class="self-end">
+                <button class="text-blue-600 hover:underline">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </button>
+            </div>-->
+        </div>
+
+        <!-- Messages for "Are you planning to continue booklogging?" -->
+        <div id="continueBookloggingYesMessage" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md shadow-md mb-8" role="alert">
+            <p class="font-bold">Great!</p>
+            <p>We will keep in touch next semester.</p>
+        </div>
+
+        <div id="continueBookloggingNoMessage" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md shadow-md mb-8" role="alert">
+            <p class="font-bold">Ok, thank you for your participation so far.</p>
+            <p>Please feel free to reach out in future, if interested.</p>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm mt-8">
+            <p>The Booklegger Program is a volunteer effort supported by the Fremont Branch of the Alameda County Library.</p>
+            <p>For more information contact : Telephone:(510) 745-1421 Email:fremont.children@aclibrary.org</p>
+            <!--<p class="mt-2">
+                <a href="#" class="text-blue-600 hover:underline">Newsletter</a> |
+                <a href="#" class="text-blue-600 hover:underline">Newsletter archive</a>
+            </p>-->
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const radioYes = document.getElementById('radioYes');
+            const radioNo = document.getElementById('radioNo');
+            const availabilitySection = document.getElementById('availabilitySection');
+            const continueBookloggingSection = document.getElementById('continueBookloggingSection');
+
+            const continueRadioYes = document.getElementById('continueRadioYes');
+            const continueRadioNo = document.getElementById('continueRadioNo');
+            const continueBookloggingYesMessage = document.getElementById('continueBookloggingYesMessage');
+            const continueBookloggingNoMessage = document.getElementById('continueBookloggingNoMessage');
+
+
+            // Function to manage visibility of main sections based on "Are you booklogging next semester?" selection
+            function toggleMainSectionsVisibility() {
+                if (radioYes.checked) {
+                    availabilitySection.style.display = 'block';
+                    continueBookloggingSection.style.display = 'none';
+                    // Hide messages when main sections change
+                    continueBookloggingYesMessage.style.display = 'none';
+                    continueBookloggingNoMessage.style.display = 'none';
+                } else if (radioNo.checked) {
+                    availabilitySection.style.display = 'none';
+                    continueBookloggingSection.style.display = 'block';
+                    // Reset continue booklogging radios and messages when 'No' is clicked
+                    if (continueRadioYes) continueRadioYes.checked = false;
+                    if (continueRadioNo) continueRadioNo.checked = false;
+                    toggleContinueBookloggingMessages(); // Ensure messages are hidden
+                } else {
+                    // Hide both if neither is selected (e.g., on initial load if no default)
+                    availabilitySection.style.display = 'none';
+                    continueBookloggingSection.style.display = 'none';
+                    continueBookloggingYesMessage.style.display = 'none';
+                    continueBookloggingNoMessage.style.display = 'none';
+                }
+            }
+
+            // Function to manage visibility of messages based on "Are you planning to continue booklogging?" selection
+            function toggleContinueBookloggingMessages() {
+                if (continueRadioYes.checked) {
+                    continueBookloggingYesMessage.style.display = 'block';
+                    continueBookloggingNoMessage.style.display = 'none';
+                } else if (continueRadioNo.checked) {
+                    continueBookloggingYesMessage.style.display = 'none';
+                    continueBookloggingNoMessage.style.display = 'block';
+                } else {
+                    continueBookloggingYesMessage.style.display = 'none';
+                    continueBookloggingNoMessage.style.display = 'none';
+                }
+            }
+
+            // Add event listeners to the main radio buttons
+            if (radioYes) {
+                radioYes.addEventListener('change', toggleMainSectionsVisibility);
+            }
+            if (radioNo) {
+                radioNo.addEventListener('change', toggleMainSectionsVisibility);
+            }
+
+            // Add event listeners to the "continue booklogging" radio buttons
+            if (continueRadioYes) {
+                continueRadioYes.addEventListener('change', toggleContinueBookloggingMessages);
+            }
+            if (continueRadioNo) {
+                continueRadioNo.addEventListener('change', toggleContinueBookloggingMessages);
+            }
+
+            // Initial checks to set the correct visibility on page load
+            toggleMainSectionsVisibility();
+            toggleContinueBookloggingMessages(); // Call this to set initial state for messages
+        });
+    </script>
+</body>
+</html>
