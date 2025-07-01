@@ -409,9 +409,9 @@
                             body: JSON.stringify(formData),
                         });
 
-                        const result = await response.json(); // Assuming GAS returns JSON
+                        //const result = await response.json(); // Assuming GAS returns JSON
 
-                        if (result.status === 'success') {
+                        //if (result.status === 'success') {
                             // Construct the detailed message for success
                             let detailsHtml = `
                                 <p><strong>Name:</strong> ${name || 'N/A'}</p>
@@ -423,11 +423,11 @@
                             submissionDetails.innerHTML = detailsHtml;
                             availabilitySection.style.display = 'none'; // Hide the form
                             submissionSuccessMessage.style.display = 'block'; // Show success message
-                        } else {
+                       // } else {
                             // Handle error response from GAS
-                            errorMessageContent.textContent = result.message || 'An unknown error occurred on the server.';
-                            submissionErrorMessage.style.display = 'block'; // Show error message
-                        }
+                           // errorMessageContent.textContent = result.message || 'An unknown error occurred on the server.';
+                            //submissionErrorMessage.style.display = 'block'; // Show error message
+                       // }
                     } catch (error) {
                         // Handle network errors or issues with the fetch request itself
                         console.error('Fetch error:', error);
