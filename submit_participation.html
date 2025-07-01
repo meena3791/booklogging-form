@@ -161,7 +161,7 @@
             <div class="mb-4">
                 <label for="additionalComments" class="block text-gray-700 text-sm font-bold mb-2 flex items-center">
                     Additional comments
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg id="infoIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-600 ml-2 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </label>
@@ -233,6 +233,10 @@
             const continueBookloggingYesMessage = document.getElementById('continueBookloggingYesMessage');
             const continueBookloggingNoMessage = document.getElementById('continueBookloggingNoMessage');
 
+            const infoIcon = document.getElementById('infoIcon');
+            const infoModal = document.getElementById('infoModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+
 
             // Function to manage visibility of main sections based on "Are you booklogging next semester?" selection
             function toggleMainSectionsVisibility() {
@@ -286,6 +290,28 @@
             }
             if (continueRadioNo) {
                 continueRadioNo.addEventListener('change', toggleContinueBookloggingMessages);
+            }
+
+            // Event listeners for the info modal
+            if (infoIcon) {
+                infoIcon.addEventListener('click', function() {
+                    infoModal.style.display = 'flex'; // Show the modal
+                });
+            }
+
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', function() {
+                    infoModal.style.display = 'none'; // Hide the modal
+                });
+            }
+
+            // Close modal if clicked outside content
+            if (infoModal) {
+                infoModal.addEventListener('click', function(event) {
+                    if (event.target === infoModal) {
+                        infoModal.style.display = 'none';
+                    }
+                });
             }
 
             // Initial checks to set the correct visibility on page load
