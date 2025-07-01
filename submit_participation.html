@@ -293,6 +293,12 @@
             const submitAvailabilityBtn = document.getElementById('submitAvailabilityBtn'); // New: Get the submit button
             const submissionSuccessMessage = document.getElementById('submissionSuccessMessage'); // New: Get the success message div
 
+             // Get references to input fields for data collection
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const numClassesSelect = document.getElementById('numClasses');
+            const additionalCommentsTextarea = document.getElementById('additionalComments');
+
 
             // Function to manage visibility of main sections based on "Are you booklogging next semester?" selection
             function toggleMainSectionsVisibility() {
