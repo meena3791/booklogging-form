@@ -45,7 +45,7 @@
         }
         /* Hidden by default, shown by JavaScript */
         #availabilitySection, #continueBookloggingSection,
-        #continueBookloggingYesMessage, #continueBookloggingNoMessage, #submissionSuccessMessage {
+        #continueBookloggingYesMessage, #continueBookloggingNoMessage, #submissionSuccessMessage, #submissionErrorMessage {
             display: none;
         }
     </style>
@@ -248,6 +248,13 @@
             <p>We will email you the class assignments for next semester.</p>
         </div>
 
+        <!-- Submission Error Message -->
+        <div id="submissionErrorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md shadow-md mb-8" role="alert">
+            <p class="font-bold">Submission Failed!</p>
+            <p id="errorMessageContent"></p>
+            <p>Please try again or contact support if the issue persists.</p>
+        </div>
+
         <!-- Footer -->
         <footer class="text-center text-gray-500 text-sm mt-8">
             <p>The Booklegger Program is a volunteer effort supported by the Fremont Branch of the Alameda County Library.</p>
@@ -292,6 +299,8 @@
 
             const submitAvailabilityBtn = document.getElementById('submitAvailabilityBtn'); // New: Get the submit button
             const submissionSuccessMessage = document.getElementById('submissionSuccessMessage'); // New: Get the success message div
+            const submissionErrorMessage = document.getElementById('submissionErrorMessage'); // New: Error message div
+            const submissionDetails = document.getElementById('submissionDetails');
 
              // Get references to input fields for data collection
             const nameInput = document.getElementById('name');
@@ -311,6 +320,7 @@
                     continueBookloggingYesMessage.style.display = 'none';
                     continueBookloggingNoMessage.style.display = 'none';
                     submissionSuccessMessage.style.display = 'none';
+                    submissionErrorMessage.style.display = 'none';
                     
                 } else if (radioNo.checked) {
                     availabilitySection.style.display = 'none';
@@ -330,8 +340,10 @@
 
             // Function to manage visibility of messages based on "Are you planning to continue booklogging?" selection
             function toggleContinueBookloggingMessages() {
-                // Hide success message when continue booklogging radio changes
+                // Hide all message when continue booklogging radio changes
+                
                 submissionSuccessMessage.style.display = 'none';
+                submissionErrorMessage.style.display = 'none';
                 if (continueRadioYes.checked) {
                     continueBookloggingYesMessage.style.display = 'block';
                     continueBookloggingNoMessage.style.display = 'none';
