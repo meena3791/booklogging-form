@@ -101,6 +101,11 @@
     white-space: pre-wrap; /* Preserves whitespace and wraps text */
     word-wrap: break-word; /* Breaks long words if necessary */
 }
+#booksTable textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
 /* Explicit column widths for better control with table-layout: fixed */
 #booksTable th:nth-child(1),
 #booksTable td:nth-child(1) { /* Call no. */
