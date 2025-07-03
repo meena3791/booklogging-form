@@ -79,8 +79,28 @@
     white-space: normal; /* Ensures text wraps normally, not on a single line */
     /* Add overflow hidden to prevent content from spilling out if it can't wrap */
     overflow: hidden;
+    word-break: break-all; /* Breaks words at any character if too long */
 }
-
+#booksTable textarea {
+    width: 100%;
+    height: auto; /* Allow height to adjust based on content */
+    min-height: 40px; /* Or whatever makes sense for a single line */
+    resize: vertical; /* Allow vertical resizing by user, or 'none' to disable */
+    overflow: auto; /* Add scrollbars if content exceeds height */
+    box-sizing: border-box;
+    word-wrap: break-word; /* Important for long words */
+    white-space: pre-wrap; /* Preserve spaces and wrap */
+    background-color: #f8fafc; /* For consistency */
+    border: 1px solid #cbd5e1; /* For consistency */
+    border-radius: 0.375rem; /* For consistency */
+    padding: 0.625rem 0.875rem; /* For consistency */
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: #334155;
+        /* Crucial for text wrapping *within* the textarea */
+    white-space: pre-wrap; /* Preserves whitespace and wraps text */
+    word-wrap: break-word; /* Breaks long words if necessary */
+}
 /* Explicit column widths for better control with table-layout: fixed */
 #booksTable th:nth-child(1),
 #booksTable td:nth-child(1) { /* Call no. */
