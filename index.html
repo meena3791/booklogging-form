@@ -711,6 +711,35 @@
                         return;
                     }
 
+                    // Function to process pasted data and add rows
+            async function processPastedData() {
+                const pastedText = await showPasteModal();
+                if (pastedText) {
+                    const lines = pastedText.split('\n').filter(line => line.trim() !== '');
+                    if (lines.length > 0) {
+                        // Clear existing rows only if new data is pasted
+                        while (booksTableBody.firstChild) {
+                            booksTableBody.removeChild(booksTableBody.firstChild);
+                        }
+                        rowCount = 0; // Reset rowCount as we are repopulating
+                    }
+
+                    lines.forEach(line => {
+                        // Split by tab for spreadsheet data, or by multiple spaces as a fallback
+                        const columns = line.split('\t').map(col => col.trim());
+                        if (columns.length >= 3) {
+                            addNewBookRow(columns[0], columns[1], columns[2]);
+                        } else if (columns.length > 0) {
+                            // Handle cases where fewer than 3 columns might be present
+                            addNewBookRow(columns[0] || '', columns[1] || '', columns[2] || '');
+                        }
+                    });
+                    showMessage('Book data pasted successfully!', 'success');
+                } else {
+                    showMessage('Pasting cancelled or no data entered.', 'error');
+                }
+            }
+
 // Normalize newline characters to handle data copied from different OS (e.g., Windows \r\n vs Unix \n)
                     const normalizedData = pastedData.replace(/\r/g, ''); // Remove carriage returns
                     console.log('Normalized data (after \\r removal):', normalizedData);
@@ -804,7 +833,7 @@
 
              // Event listener for "Paste from Spreadsheet" button
             if (pasteFromSpreadsheetBtn) { // Ensure button exists before adding listener
-                pasteFromSpreadsheetBtn.addEventListener('click', pasteDataFromSpreadsheet);
+                pasteFromSpreadsheetBtn.addEventListener('click', processPastedData);
             } else {
                 console.error('Paste from Spreadsheet button not found!');
             }
