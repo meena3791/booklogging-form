@@ -700,18 +700,7 @@
                 });
             }
 
-            // Modified pasteDataFromSpreadsheet function to use the custom modal
-              async function pasteDataFromSpreadsheet() {
-                  console.log('pasteDataFromSpreadsheet called.');
-                try {
-                    const pastedData = await showPasteModal(); // Await the modal's result
-
-                    if (pastedData === null || pastedData.trim() === '') {
-                        showMessage('No data pasted or operation cancelled.', 'info');
-                        return;
-                    }
-
-                    // Function to process pasted data and add rows
+               // Function to process pasted data and add rows
             async function processPastedData() {
                 const pastedText = await showPasteModal();
                 if (pastedText) {
@@ -740,6 +729,19 @@
                 }
             }
 
+
+            // Modified pasteDataFromSpreadsheet function to use the custom modal
+              async function pasteDataFromSpreadsheet() {
+                  console.log('pasteDataFromSpreadsheet called.');
+                try {
+                    const pastedData = await showPasteModal(); // Await the modal's result
+
+                    if (pastedData === null || pastedData.trim() === '') {
+                        showMessage('No data pasted or operation cancelled.', 'info');
+                        return;
+                    }
+
+                 
 // Normalize newline characters to handle data copied from different OS (e.g., Windows \r\n vs Unix \n)
                     const normalizedData = pastedData.replace(/\r/g, ''); // Remove carriage returns
                     console.log('Normalized data (after \\r removal):', normalizedData);
