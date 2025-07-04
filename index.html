@@ -893,8 +893,11 @@
             //pasteFromSpreadsheetBtn.addEventListener('click', pasteDataFromSpreadsheet);
 
             // Event listener for "Add new row" button
-            addNewRowBtn.addEventListener('click', addNewBookRow);
-
+            //addNewRowBtn.addEventListener('click', addNewBookRow);
+            // Change it to this:
+            addNewRowBtn.addEventListener('click', () => {
+                addNewBookRow(); // Now addNewBookRow is called with no arguments (or you can pass explicit empty strings)
+            });
              // Event listener for "Paste from Spreadsheet" button
             if (pasteFromSpreadsheetBtn) { // Ensure button exists before adding listener
                 pasteFromSpreadsheetBtn.addEventListener('click', processPastedData);
