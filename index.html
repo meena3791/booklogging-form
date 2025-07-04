@@ -651,25 +651,25 @@
                 newRow.appendChild(tdCallNo);
 
                 const tdAuthor = document.createElement('td');
-                const inputAuthor = document.createElement('input');
-                inputAuthor.type = 'text';
-                inputAuthor.name = `author_${rowCount}`;
-                //inputAuthor.placeholder = 'e.g., Lisa Randall';
-                inputAuthor.value = author;
-                inputAuthor.required = true;
-                inputAuthor.className = 'block w-full px-3.5 py-2.5 border border-slate-300 rounded-md bg-white font-size-1rem line-height-1.5rem text-slate-700';
-                tdAuthor.appendChild(inputAuthor);
+                const textareaAuthor = document.createElement('textarea'); // <--- CRITICAL CHANGE: Create a <textarea> element
+                textareaAuthor.name = `author_${rowCount}`;
+                textareaAuthor.value = author;
+                textareaAuthor.required = true;
+                textareaAuthor.rows = 1; // <--- Set initial rows. We'll use JS/CSS for auto-resize.
+                textareaAuthor.className = 'block w-full px-3.5 py-2.5 border border-slate-300 rounded-md bg-white font-size-1rem line-height-1.5rem text-slate-700'; // Apply your existing classes
+                tdAuthor.appendChild(textareaAuthor);
                 newRow.appendChild(tdAuthor);
 
+
+                // --- Title Field (CHANGE TO TEXTAREA) ---
                 const tdTitle = document.createElement('td');
-                const inputTitle = document.createElement('input');
-                inputTitle.type = 'text';
-                inputTitle.name = `title_${rowCount}`;
-                //inputTitle.placeholder = 'e.g., Warped Passages';
-                inputTitle.value = title;
-                inputTitle.required = true;
-                inputTitle.className = 'block w-full px-3.5 py-2.5 border border-slate-300 rounded-md bg-white font-size-1rem line-height-1.5rem text-slate-700';
-                tdTitle.appendChild(inputTitle);
+                const textareaTitle = document.createElement('textarea'); // <--- CRITICAL CHANGE: Create a <textarea> element
+                textareaTitle.name = `title_${rowCount}`;
+                textareaTitle.value = title;
+                textareaTitle.required = true;
+                textareaTitle.rows = 1; // <--- Set initial rows.
+                textareaTitle.className = 'block w-full px-3.5 py-2.5 border border-slate-300 rounded-md bg-white font-size-1rem line-height-1.5rem text-slate-700'; // Apply your existing classes
+                tdTitle.appendChild(textareaTitle);
                 newRow.appendChild(tdTitle);
 
                 const tdDelete = document.createElement('td');
@@ -684,11 +684,27 @@
                 if (booksTableBody) {
                     booksTableBody.appendChild(newRow);
                     console.log('New row appended to booksTableBody. Current tbody child count:', booksTableBody.children.length);
-                    // After appending, check the input element's value property directly
-                    // This query should now work
+                    function autoResizeTextarea(textareaElement) {
+                        textareaElement.style.height = 'auto'; // Reset height to recalculate
+                        textareaElement.style.height = textareaElement.scrollHeight + 'px'; // Set to scroll height
+                    }
+
+                    // Add event listeners to trigger auto-resize when user types
+                    textareaAuthor.addEventListener('input', () => autoResizeTextarea(textareaAuthor));
+                    textareaTitle.addEventListener('input', () => autoResizeTextarea(textareaTitle));
+
+                     // Trigger auto-resize once immediately if there's pre-filled data (e.g., from pasting)
+                    // This ensures they are sized correctly on initial load/paste.
+                    if (author) autoResizeTextarea(textareaAuthor);
+                    if (title) autoResizeTextarea(textareaTitle);
+                   // After appending, check the input/textarea element's value property directly
                     const addedCallNoInput = newRow.querySelector(`input[name="callNo_${rowCount}"]`);
                     if (addedCallNoInput) {
                         console.log(`Value property of callNo_${rowCount} after append:`, addedCallNoInput.value);
+                    }
+                    const addedAuthorTextarea = newRow.querySelector(`textarea[name="author_${rowCount}"]`);
+                    if (addedAuthorTextarea) {
+                        console.log(`Value property of author_${rowCount} after append:`, addedAuthorTextarea.value);
                     }
                 } else {
                     console.error('booksTableBody is null! Cannot append new row.');
