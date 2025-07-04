@@ -641,7 +641,7 @@
                 // Create table data cells
                 const tdCallNo = document.createElement('td');
                 const inputCallNo = document.createElement('input');
-                inputCallNo.type = 'text';
+                inputCallNo.type = 'textarea';
                 inputCallNo.name = `callNo_${rowCount}`; // Use dynamic name
                 //inputCallNo.placeholder = 'e.g., QC173.4';
                 inputCallNo.value = callNo; // Set value directly
@@ -652,7 +652,7 @@
 
                 const tdAuthor = document.createElement('td');
                 const inputAuthor = document.createElement('input');
-                inputAuthor.type = 'text';
+                inputAuthor.type = 'textarea';
                 inputAuthor.name = `author_${rowCount}`;
                 //inputAuthor.placeholder = 'e.g., Lisa Randall';
                 inputAuthor.value = author;
@@ -663,7 +663,7 @@
 
                 const tdTitle = document.createElement('td');
                 const inputTitle = document.createElement('input');
-                inputTitle.type = 'text';
+                inputTitle.type = 'textarea';
                 inputTitle.name = `title_${rowCount}`;
                 //inputTitle.placeholder = 'e.g., Warped Passages';
                 inputTitle.value = title;
