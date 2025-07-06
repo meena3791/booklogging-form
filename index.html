@@ -793,9 +793,9 @@
 
                     lines.forEach(line => {
                         // Split by tab for spreadsheet data, or by multiple spaces as a fallback
-                        // Split by one or more whitespace characters (tabs, spaces, etc.)
-            // This regex /\s+/ will split by any sequence of whitespace characters.
-                        const columns = line.split(/\s+/).map(col => col.trim()); // Assuming tab-separated values
+                        // Split by one or more tab characters (\t+).
+            // This regex /\t+/ will split by any sequence of tab characters.
+                        const columns = line.split(/\t+/).map(col => col.trim()); // Assuming tab-separated values
                         if (columns.length >= 3) {
                             addNewBookRow(columns[0], columns[1], columns[2]);
                         } else if (columns.length > 0) {
