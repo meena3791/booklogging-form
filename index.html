@@ -793,7 +793,7 @@
 
                     lines.forEach(line => {
                         // Split by tab for spreadsheet data, or by multiple spaces as a fallback
-                        const columns = line.split('\t').map(col => col.trim());
+                        const columns = line.split('/[\t]+|\s{2,}/').map(col => col.trim()); // Assuming tab-separated values
                         if (columns.length >= 3) {
                             addNewBookRow(columns[0], columns[1], columns[2]);
                         } else if (columns.length > 0) {
