@@ -783,13 +783,14 @@
                 const pastedText = await showPasteModal();
                 if (pastedText) {
                     const lines = pastedText.split('\n').filter(line => line.trim() !== '');
-                    if (lines.length > 0) {
+                   /* if (lines.length > 0) {
                         // Clear existing rows only if new data is pasted
                         while (booksTableBody.firstChild) {
                             booksTableBody.removeChild(booksTableBody.firstChild);
                         }
                         rowCount = 0; // Reset rowCount as we are repopulating
-                    }
+                    }*/
+                    if (lines.length > 0) {
 
                     lines.forEach(line => {
                         // Split by tab for spreadsheet data, or by multiple spaces as a fallback
@@ -805,9 +806,12 @@
                     });
                     showMessage('Book data pasted successfully!', 'success');
                 } else {
+                    showMessage('No new data to paste.', 'info');
+                    }
+                } else {
                     showMessage('Pasting cancelled or no data entered.', 'error');
                 }
-            }
+            
 
 
             // Modified pasteDataFromSpreadsheet function to use the custom modal
