@@ -1030,14 +1030,14 @@
                 const bookRows = booksTableBody.querySelectorAll('.book-row');
                 bookRows.forEach((row, index) => {
                     const callNoInput = row.querySelector(`input[name="callNo_${index}"]`);
-                    const authorInput = row.querySelector(`input[name="author_${index}"]`);
-                    const titleInput = row.querySelector(`input[name="title_${index}"]`);
+                    const authorInput = row.querySelector(`textarea[name="author_${index}"]`);
+                    const titleInput = row.querySelector(`textarea[name="title_${index}"]`);
 
                     // Also check required for dynamic rows
                     // Note: This form's image example implies optional blank rows for books,
                     // but inputs have 'required'. This logic allows empty optional rows if inputs were not required.
                     // If all book fields *must* be filled for a row to be included, adjust this.
-                    const isRowFilled = callNoInput.value.trim() || authorInput.value.trim() || titleInput.value.trim();
+                    const isRowFilled = callNoInput.value || authorInput.value || titleInput.value;
 
                     if (isRowFilled) {
                         if (callNoInput && callNoInput.hasAttribute('required') && callNoInput.value.trim() === '') {
