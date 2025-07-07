@@ -1037,7 +1037,7 @@
                     // Note: This form's image example implies optional blank rows for books,
                     // but inputs have 'required'. This logic allows empty optional rows if inputs were not required.
                     // If all book fields *must* be filled for a row to be included, adjust this.
-                    const isRowFilled = callNoInput.value || authorInput.value || titleInput.value;
+                    const isRowFilled = callNoInput.value.trim() || authorInput.value.trim() || titleInput.value.trim();
 
                     if (isRowFilled) {
                         if (callNoInput && callNoInput.hasAttribute('required') && callNoInput.value.trim() === '') {
