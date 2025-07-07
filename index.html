@@ -803,36 +803,54 @@
 
                // Function to process pasted data and add rows
             async function processPastedData() {
-                const pastedText = await showPasteModal();
-                if (pastedText) {
-                    const lines = pastedText.split('\n').filter(line => line.trim() !== '');
-                   /* if (lines.length > 0) {
-                        // Clear existing rows only if new data is pasted
-                        while (booksTableBody.firstChild) {
-                            booksTableBody.removeChild(booksTableBody.firstChild);
-                        }
-                        rowCount = 0; // Reset rowCount as we are repopulating
-                    }*/
-                    if (lines.length > 0) {
+               const pastedText = await showPasteModal();
+                if (!pastedText) { // If cancelled or empty
+                    showMessage('Pasting cancelled or no data entered.', 'info');
+                    return;
+                }
 
-                    lines.forEach(line => {
-                        // Split by tab for spreadsheet data, or by multiple spaces as a fallback
-                        // Split by one or more tab characters (\t+).
-            // This regex /\t+/ will split by any sequence of tab characters.
-                        const columns = line.split(/\t+| {2,}/).map(col => col.trim()); // Assuming tab-separated values
-                        if (columns.length >= 3) {
-                            addNewBookRow(columns[0], columns[1], columns[2]);
-                        } else if (columns.length > 0) {
-                            // Handle cases where fewer than 3 columns might be present
-                            addNewBookRow(columns[0] || '', columns[1] || '', columns[2] || '');
-                        }
-                    });
+                const normalizedData = pastedText.replace(/\r/g, ''); // Remove carriage returns
+                const lines = normalizedData.split('\n'); // Split by newline, preserving empty lines
+
+                // Clear all existing book rows before pasting
+                while (booksTableBody.firstChild) { // More robust way to clear all children
+                    booksTableBody.removeChild(booksTableBody.firstChild);
+                }
+                rowCount = 0; // Reset rowCount after clearing all rows
+
+                let actualDataAdded = false; // Flag to track if any row with actual content was added
+
+                lines.forEach(line => {
+                    const columns = line.split(/\t+| {2,}/); // Split by tab or 2+ spaces
+                    // Note: No .trim() on individual columns here, as per previous user request.
+                    const callNo = columns[0] !== undefined ? columns[0] : '';
+                    const author = columns[1] !== undefined ? columns[1] : '';
+                    const title = columns[2] !== undefined ? columns[2] : '';
+
+                    // Add a row for every line from the pasted data, even if it's empty
+                    addNewBookRow(callNo, author, title);
+
+                    // Check if this specific row contained any actual data
+                    if (callNo !== '' || author !== '' || title !== '') {
+                        actualDataAdded = true;
+                    }
+                });
+
+                // After processing all lines, if no actual data rows were added (e.g., only empty lines were pasted),
+                // and the table is now empty (which it should be if only empty lines were processed),
+                // then we ensure there is at least one empty row.
+                // This condition handles the edge case where the pasted content was entirely empty lines,
+                // and we still want *one* empty row for user input.
+                if (!actualDataAdded && booksTableBody.querySelectorAll('.book-row').length === 0) {
+                    addNewBookRow(); // Add one empty row if no data was truly pasted
+                    showMessage('Pasted content was empty or contained no valid data. Added a blank row.', 'info');
+                } else if (actualDataAdded) {
                     showMessage('Book data pasted successfully!', 'success');
                 } else {
-                    showMessage('No new data to paste.', 'info');
-                    }
-                } else {
-                    showMessage('Pasting cancelled or no data entered.', 'error');
+                    // This case means lines were processed, but all resulted in empty columns.
+                    // The addNewBookRow() would have been called for each empty line.
+                    // So, the table already contains the "empty rows" corresponding to the pasted empty lines.
+                    showMessage('Pasted content contained only empty rows. No new data added.', 'info');
                 }
             }
 
