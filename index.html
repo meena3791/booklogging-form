@@ -921,6 +921,13 @@
                 });
                 gradeCheckboxesContainer.style.borderColor = ''; // Reset validation border
 
+                // Clear the comments textarea
+                const commentsTextArea = document.getElementById('comments');
+                if (commentsTextArea) {
+                    commentsTextArea.value = '';
+                    commentsTextArea.style.borderColor = '';
+                }
+
                 // Clear all dynamic book rows and add one empty row
                 while (booksTableBody.querySelectorAll('.book-row').length > 0) {
                     booksTableBody.querySelector('.book-row').remove();
@@ -997,6 +1004,12 @@
                         //formData[name] = element.value.trim();
                     }
                 });
+
+                // Explicitly get the comments field value
+                const commentsTextArea = document.getElementById('comments');
+                if (commentsTextArea) {
+                    formData.comments = commentsTextArea.value.trim();
+                }
 
                 // Collect selected grades from checkboxes
                 const selectedGrades = [];
