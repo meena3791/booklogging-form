@@ -169,6 +169,8 @@
             cursor: pointer;
             transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            position: relative; /* Added to create a stacking context */
+            z-index: 10; /* Added to bring it to the front */
         }
         .submit-button:hover {
             background-color: #1d4ed8; /* blue-700 */
