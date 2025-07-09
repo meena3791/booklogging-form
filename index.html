@@ -421,10 +421,12 @@
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
             z-index: 1000;
+            pointer-events: none;/* Prevents it from blocking clicks when hidden */
         }
 
         .message-box.show {
             opacity: 1;
+            pointer-events: auto;/* Allows clicks/interaction when visible (though not strictly needed for a message) */
         }
 
         .message-box.success {
