@@ -770,6 +770,49 @@
                     }
                 }
             }
+
+            // Function to handle keyboard navigation (focus trap) within the modal
+            function handleModalKeydown(event) {
+                if (event.key === 'Tab') {
+                    // If the active element is the pasteTextArea
+                    if (document.activeElement === pasteTextArea) {
+                        event.preventDefault(); // Prevent default tab behavior (moving focus)
+
+                        // Insert a tab character into the textarea
+                        const start = pasteTextArea.selectionStart;
+                        const end = pasteTextArea.selectionEnd;
+                        const value = pasteTextArea.value;
+
+                        pasteTextArea.value = value.substring(0, start) + '\t' + value.substring(end);
+                        
+                        // Restore cursor position after inserting tab
+                        pasteTextArea.selectionStart = pasteTextArea.selectionEnd = start + 1;
+                    } else {
+                        // If focus is on a button, manually cycle between buttons
+                        const focusableButtons = Array.from(
+                            pasteModalOverlay.querySelectorAll('.modal-footer button:not([disabled])')
+                        );
+
+                        if (focusableButtons.length > 0) {
+                            const currentButtonIndex = focusableButtons.indexOf(document.activeElement);
+                            let nextButtonIndex;
+
+                            if (event.shiftKey) { // Shift + Tab
+                                nextButtonIndex = (currentButtonIndex - 1 + focusableButtons.length) % focusableButtons.length;
+                            } else { // Tab
+                                nextButtonIndex = (currentButtonIndex + 1) % focusableButtons.length;
+                            }
+                            focusableButtons[nextButtonIndex].focus();
+                            event.preventDefault();
+                        } else {
+                            // If no buttons, or if somehow focus escapes, fallback to original textarea
+                            pasteTextArea.focus();
+                            event.preventDefault();
+                        }
+                    }
+                }
+            }
+
             
 // Function to show the modal and return a Promise with its result
             function showPasteModal() {
@@ -779,6 +822,8 @@
                     pasteModalOverlay.classList.remove('hidden'); // Show the modal
                     console.log('Modal display changed to block.');
                     pasteTextArea.focus(); // Set focus to the textarea for immediate pasting
+                    // Add event listener for focus trapping on the overlay
+                    pasteModalOverlay.addEventListener('keydown', handleModalKeydown);
                 } else {
                     console.error('Modal overlay or textarea element not found!');
                     showMessage('Error: Paste modal components not found. Please refresh.', 'error');
@@ -797,9 +842,14 @@
 
                     const handleCancel = () => {
                         pasteModalOverlay.classList.add('hidden');
+                        pasteModalOverlay.removeAttribute('aria-modal');
+                        pasteModalOverlay.removeAttribute('role');
+                        if (lastFocusedElement) { // Return focus to the element that opened the modal
+                            lastFocusedElement.focus();
+                        }
                         resolve(null); // Resolve with null if cancelled
                         removeListeners();
-                    };
+                    }
 
                     // Add event listeners for modal buttons
                     modalOkBtn.addEventListener('click', handleOk);
