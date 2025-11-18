@@ -670,6 +670,9 @@
             
             let rowCount = 0; // Start at 1 because one row is already present in HTML
 
+            // 🌟 ADD THIS LINE TO SET THE CORRECT DEFAULT DATE
+    setInitialDate();
+
             // Function to add a new row to the books table
             function addNewBookRow(callNo = '', author = '', title = '') {
                 console.log('addNewBookRow called with:', { callNo, author, title, current_rowCount: rowCount });
@@ -812,6 +815,33 @@
                     }
                 }
             }
+
+            // Function to get the current local date in YYYY-MM-DD format
+function getLocalDateString() {
+    // 1. Create a new Date object (holds the current local date/time)
+    const today = new Date(); 
+    
+    // 2. Get the local year
+    const year = today.getFullYear();
+    
+    // 3. Get the local month (add 1 because getMonth() returns 0-11) and pad with '0'
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    
+    // 4. Get the local day of the month and pad with '0'
+    const day = String(today.getDate()).padStart(2, '0');
+    
+    // 5. Combine them into the required HTML date input format: YYYY-MM-DD
+    return `${year}-${month}-${day}`;
+}
+
+// Function to set the default date
+function setInitialDate() {
+    const presentationDateInput = document.getElementById('presentationDate');
+    if (presentationDateInput) {
+        // Set the value using the locally formatted date string
+        presentationDateInput.value = getLocalDateString();
+    }
+}
 
             
 // Function to show the modal and return a Promise with its result
